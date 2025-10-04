@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>מחשבון מחירי צביעה - Paintr</title>
+    <meta
+      name="description"
+      content="מחשבון מחירי צביעה צביעת בתים באזור הצפון"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <img src="paintr-logo.png" alt="Paintr Logo" class="header-logo" />
+        <!-- <h1>מחשבון מחירי צביעה</h1>
+        <p class="subtitle">הערכה מהירה ומדויקת לצביעת הבית שלך</p> -->
+      </header>
+
+      <main class="main-content">
+        <div class="calculator-section">
+          <h2><i class="fas fa-calculator"></i> מחשבון מחירי צביעה</h2>
+
+          <form id="calculatorForm" class="calculator-form">
+            <!-- מספר חדרים -->
+            <div class="form-group">
+              <label for="rooms" class="form-label">
+                <i class="fas fa-home"></i>
+                מספר חדרים לצביעה
+              </label>
+              <div class="input-group">
+                <button
+                  type="button"
+                  class="btn-counter"
+                  onclick="changeRooms(-1)"
+                >
+                  -
+                </button>
+                <input
+                  type="number"
+                  id="rooms"
+                  name="rooms"
+                  value="1"
+                  min="0.5"
+                  max="20"
+                  step="0.5"
+                  class="form-input"
+                />
+                <button
+                  type="button"
+                  class="btn-counter"
+                  onclick="changeRooms(1)"
+                >
+                  +
+                </button>
+              </div>
+              <small class="form-help"
+                >חדר = עד 12 מ״ר, לחדרים גדולים יותר הזינו מספר חדרים בהתאם.<br />
+                מחיר הבסיס כולל צבע לבן סופרקריל, 1-2 שכבות לפי הצורך.<br />
+                ניתן להזין ערך לא שלם.</small
+              >
+            </div>
+
+            <!-- כולל תקרה -->
+            <div class="form-group">
+              <label class="form-label">
+                <i class="fa-solid fa-hand-point-up"></i>
+                כולל תקרה
+              </label>
+              <div class="radio-group">
+                <label class="radio-option">
+                  <input type="radio" name="ceiling" value="none" checked />
+                  <span class="radio-custom"></span>
+                  לא
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="ceiling" value="all" />
+                  <span class="radio-custom"></span>
+                  כל החדרים
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="ceiling" value="custom" />
+                  <span class="radio-custom"></span>
+                  מספר חדרים
+                </label>
+              </div>
+              <div
+                id="ceilingCustom"
+                class="custom-input"
+                style="display: none"
+              >
+                <div class="input-group">
+                  <button
+                    type="button"
+                    class="btn-counter"
+                    onclick="changeCeilingRooms(-1)"
+                  >
+                    -
+                  </button>
+                  <input
+                    type="number"
+                    id="ceilingRooms"
+                    name="ceilingRooms"
+                    value="1"
+                    min="0"
+                    max="20"
+                    step="0.5"
+                    class="form-input"
+                  />
+                  <button
+                    type="button"
+                    class="btn-counter"
+                    onclick="changeCeilingRooms(1)"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- תיקוני שפכטל -->
+            <div class="form-group">
+              <label class="form-label">
+                <i class="fas fa-tools"></i>
+                תיקוני שפכטל
+              </label>
+              <div class="radio-group">
+                <label class="radio-option">
+                  <input type="radio" name="plaster" value="none" checked />
+                  <span class="radio-custom"></span>
+                  לא
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="plaster" value="all" />
+                  <span class="radio-custom"></span>
+                  כל החדרים
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="plaster" value="custom" />
+                  <span class="radio-custom"></span>
+                  מספר חדרים
+                </label>
+              </div>
+              <div
+                id="plasterCustom"
+                class="custom-input"
+                style="display: none"
+              >
+                <div class="input-group">
+                  <button
+                    type="button"
+                    class="btn-counter"
+                    onclick="changePlasterRooms(-1)"
+                  >
+                    -
+                  </button>
+                  <input
+                    type="number"
+                    id="plasterRooms"
+                    name="plasterRooms"
+                    value="1"
+                    min="0"
+                    max="20"
+                    step="0.5"
+                    class="form-input"
+                  />
+                  <button
+                    type="button"
+                    class="btn-counter"
+                    onclick="changePlasterRooms(1)"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- שיוף מקדים -->
+            <div class="form-group">
+              <label class="form-label">
+                <i class="fas fa-layer-group"></i>
+                שיוף מקדים/שכבות נוספות
+              </label>
+              <div class="radio-group">
+                <label class="radio-option">
+                  <input type="radio" name="sanding" value="none" checked />
+                  <span class="radio-custom"></span>
+                  לא
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="sanding" value="all" />
+                  <span class="radio-custom"></span>
+                  כל החדרים
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="sanding" value="custom" />
+                  <span class="radio-custom"></span>
+                  מספר חדרים
+                </label>
+              </div>
+              <div
+                id="sandingCustom"
+                class="custom-input"
+                style="display: none"
+              >
+                <div class="input-group">
+                  <button
+                    type="button"
+                    class="btn-counter"
+                    onclick="changeSandingRooms(-1)"
+                  >
+                    -
+                  </button>
+                  <input
+                    type="number"
+                    id="sandingRooms"
+                    name="sandingRooms"
+                    value="1"
+                    min="0"
+                    max="20"
+                    step="0.5"
+                    class="form-input"
+                  />
+                  <button
+                    type="button"
+                    class="btn-counter"
+                    onclick="changeSandingRooms(1)"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+              <small class="form-help"
+                >לקירות הצבועים בצבע כהה/מרקם מיוחד</small
+              >
+            </div>
+
+            <!-- גוון מיוחד -->
+            <div class="form-group">
+              <label class="form-label">
+                <i class="fas fa-palette"></i>
+                גוון/צבע מיוחד
+              </label>
+              <div class="radio-group">
+                <label class="radio-option">
+                  <input
+                    type="radio"
+                    name="specialColor"
+                    value="none"
+                    checked
+                  />
+                  <span class="radio-custom"></span>
+                  לא
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="specialColor" value="all" />
+                  <span class="radio-custom"></span>
+                  כל החדרים
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="specialColor" value="custom" />
+                  <span class="radio-custom"></span>
+                  מספר חדרים
+                </label>
+              </div>
+              <div
+                id="specialColorCustom"
+                class="custom-input"
+                style="display: none"
+              >
+                <div class="input-group">
+                  <button
+                    type="button"
+                    class="btn-counter"
+                    onclick="changeSpecialColorRooms(-1)"
+                  >
+                    -
+                  </button>
+                  <input
+                    type="number"
+                    id="specialColorRooms"
+                    name="specialColorRooms"
+                    value="1"
+                    min="0"
+                    max="20"
+                    class="form-input"
+                  />
+                  <button
+                    type="button"
+                    class="btn-counter"
+                    onclick="changeSpecialColorRooms(1)"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+              <small class="form-help"
+                >מוסיף הערה לתמחור הסופי - תוספת מחיר לפי עלות הצבע</small
+              >
+            </div>
+
+            <!-- מיקום הנכס -->
+            <div class="form-group">
+              <label for="location" class="form-label">
+                <i class="fas fa-map-marker-alt"></i>
+                מיקום הנכס
+              </label>
+              <div class="autocomplete-container">
+                <input
+                  type="text"
+                  id="location"
+                  name="location"
+                  class="form-input"
+                  placeholder="הקלד שם עיר או ישוב"
+                  autocomplete="off"
+                />
+                <div id="locationSuggestions" class="suggestions"></div>
+              </div>
+              <small class="form-help"
+                >ישראל בלבד, עד 200 ק״מ נהיגה מבית שאן</small
+              >
+            </div>
+          </form>
+
+          <!-- תוצאות -->
+          <div class="results-section">
+            <h3><i class="fas fa-chart-line"></i> תוצאות החישוב</h3>
+            <div class="results-card">
+              <div class="result-item">
+                <span class="result-label">עלות מוערכת:</span>
+                <span class="result-value" id="totalPrice">₪0</span>
+              </div>
+              <div class="result-item">
+                <span class="result-label">מ״ר כלול:</span>
+                <span class="result-value" id="totalSqm">0 מ״ר</span>
+              </div>
+              <div class="result-item" id="specialNotes" style="display: none">
+                <span class="result-label">הערות מיוחדות:</span>
+                <span class="result-value" id="notesText"></span>
+              </div>
+            </div>
+            <div class="disclaimer">
+              <i class="fas fa-info-circle"></i>
+              המחיר הינו הערכה, הצעת המחיר הסופית תתקבל לאחר ההתקשרות עם בעל
+              המקצוע
+            </div>
+          </div>
+        </div>
+
+        <!-- טופס יצירת קשר -->
+        <div class="contact-section">
+          <h2><i class="fas fa-phone"></i>רוצה שנחזור אליך?</h2>
+          <form
+            id="contactForm"
+            action="https://formspree.io/f/movklvrd"
+            method="POST"
+            class="contact-form"
+          >
+            <div class="form-group">
+              <label for="contactName" class="form-label">שם מלא</label>
+              <input
+                type="text"
+                id="contactName"
+                name="name"
+                class="form-input"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="contactPhone" class="form-label">טלפון</label>
+              <input
+                type="tel"
+                id="contactPhone"
+                name="phone"
+                class="form-input"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">דרך יצירת הקשר המועדפת</label>
+              <div class="radio-group">
+                <label class="radio-option">
+                  <input
+                    type="radio"
+                    name="contactPreference"
+                    value="phone"
+                    checked
+                  />
+                  <span class="radio-custom"></span>
+                  שיחת טלפון
+                </label>
+                <label class="radio-option">
+                  <input
+                    type="radio"
+                    name="contactPreference"
+                    value="whatsapp"
+                  />
+                  <span class="radio-custom"></span>
+                  הודעת וואטסאפ
+                </label>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="contactNotes" class="form-label">הערות</label>
+              <textarea
+                id="contactNotes"
+                name="notes"
+                class="form-textarea"
+                rows="4"
+                placeholder="פרטים נוספים על הפרויקט..."
+              ></textarea>
+            </div>
+
+            <input type="hidden" id="calculationData" name="calculation_data" />
+
+            <button type="submit" class="btn-submit">
+              <i class="fas fa-paper-plane"></i>
+              שלח בקשה
+            </button>
+          </form>
+
+          <div class="thank-you" id="thankYou" style="display: none">
+            <i class="fas fa-check-circle"></i>
+            <h3>תודה רבה!</h3>
+            <p>בעל מקצוע יחזור אליך בהקדם</p>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

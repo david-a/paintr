@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>דוגמה לשימוש ב-API</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        direction: rtl;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      .example {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        margin: 20px 0;
+        border: 1px solid #e1e8ed;
+      }
+      .code {
+        background: #2d3748;
+        color: #e2e8f0;
+        padding: 15px;
+        border-radius: 8px;
+        font-family: "Courier New", monospace;
+        margin: 10px 0;
+        overflow-x: auto;
+      }
+      .button {
+        background: #667eea;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 10px 5px;
+      }
+      .button:hover {
+        background: #5a6fd8;
+      }
+      .result {
+        background: #d4edda;
+        border: 1px solid #c3e6cb;
+        color: #155724;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 10px 0;
+      }
+      .error {
+        background: #f8d7da;
+        border: 1px solid #f5c6cb;
+        color: #721c24;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 10px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>דוגמה לשימוש ב-API לחישוב מרחקים</h1>
+
+    <div class="example">
+      <h2>1. הגדרת API Key</h2>
+      <p>לפני השימוש, יש להגדיר API key בקובץ script.js:</p>
+      <div class="code">
+        const API_CONFIG = { // Google Distance Matrix API GOOGLE_API_KEY:
+        'YOUR_GOOGLE_API_KEY_HERE', // או OpenRouteService ORS_API_KEY:
+        'YOUR_ORS_API_KEY_HERE', // או Mapbox MAPBOX_API_KEY:
+        'YOUR_MAPBOX_ACCESS_TOKEN_HERE', // הפעל API USE_API: true, // בחר ספק
+        API_PROVIDER: 'google' // או 'ors' או 'mapbox' };
+      </div>
+    </div>
+
+    <div class="example">
+      <h2>2. בדיקת API</h2>
+      <p>בדוק אם ה-API עובד עם עיר כלשהי:</p>
+      <input
+        type="text"
+        id="testCity"
+        placeholder="הזן שם עיר"
+        value="תל אביב"
+      />
+      <button class="button" onclick="testAPI()">בדוק מרחק</button>
+      <div id="apiResult"></div>
+    </div>
+
+    <div class="example">
+      <h2>3. השוואת תוצאות</h2>
+      <p>השווה בין מרחק מוגדר מראש למרחק מ-API:</p>
+      <input
+        type="text"
+        id="compareCity"
+        placeholder="הזן שם עיר"
+        value="ירושלים"
+      />
+      <button class="button" onclick="compareDistances()">השווה מרחקים</button>
+      <div id="compareResult"></div>
+    </div>
+
+    <div class="example">
+      <h2>4. רשימת ערים עם מרחקים</h2>
+      <button class="button" onclick="showAllDistances()">
+        הצג כל המרחקים
+      </button>
+      <div id="allDistances"></div>
+    </div>
+
+    <script>
+      // Copy the relevant functions from script.js
+      const DISTANCE_CACHE = {
+        "בית שאן": 0,
+        נצרת: 25,
+        טבריה: 35,
+        עפולה: 20,
+        נהריה: 45,
+        צפת: 50,
+        כרמיאל: 40,
+        "נצרת עילית": 25,
+        עכו: 50,
+        "מגדל העמק": 15,
+        יקנעם: 25,
+        "מעלות-תרשיחא": 45,
+        "קריית שמונה": 55,
+        מעלות: 45,
+        תרשיחא: 45,
+        חיפה: 60,
+        נשר: 60,
+        "קריית ביאליק": 60,
+        "קריית ים": 60,
+        "קריית מוצקין": 60,
+        "קריית אתא": 60,
+        "תל אביב-יפו": 90,
+        "רמת גן": 90,
+        גבעתיים: 90,
+        "פתח תקווה": 85,
+        "ראשון לציון": 95,
+        חולון: 95,
+        "בת ים": 95,
+        אילת: 200,
+        דימונה: 120,
+        ערד: 100,
+        "באר שבע": 110,
+        אופקים: 120,
+        "קרית גת": 100,
+        אשקלון: 110,
+        אשדוד: 105,
+        רחובות: 95,
+        רמלה: 90,
+        לוד: 90,
+        "יהוד-מונוסון": 85,
+        "אור יהודה": 85,
+        "קרית אונו": 85,
+        "גבעת שמואל": 85,
+        "כפר סבא": 80,
+        "הוד השרון": 80,
+        רעננה: 80,
+        הרצליה: 85,
+        "רמת השרון": 85,
+        ירושלים: 100,
+        "בית שמש": 95,
+        "מעלה אדומים": 100,
+        "מבשרת ציון": 100,
+        "גבעת זאב": 100,
+        "אבו גוש": 100,
+        "נס ציונה": 95,
+        יבנה: 100,
+        גדרה: 105,
+        "קרית מלאכי": 110,
+        שדרות: 120,
+        נתיבות: 120,
+        "מצפה רמון": 150,
+        ירוחם: 130,
+        עומר: 110,
+        להבים: 120,
+      };
+
+      const API_CONFIG = {
+        GOOGLE_API_KEY: "", // Add your API key here
+        ORS_API_KEY: "",
+        MAPBOX_API_KEY: "",
+        USE_API: false, // Set to true to enable API
+        API_PROVIDER: "google",
+      };
+
+      const BEIT_SHEAN_COORDS = {
+        lat: 32.4971,
+        lng: 35.5013,
+        address: "בית שאן, ישראל",
+      };
+
+      async function testAPI() {
+        const city = document.getElementById("testCity").value;
+        const resultDiv = document.getElementById("apiResult");
+
+        if (!city) {
+          resultDiv.innerHTML = '<div class="error">אנא הזן שם עיר</div>';
+          return;
+        }
+
+        resultDiv.innerHTML = "<div>מחשב מרחק...</div>";
+
+        try {
+          // Test with cache first
+          const cachedDistance = DISTANCE_CACHE[city] || 0;
+
+          let apiDistance = "לא זמין";
+          if (API_CONFIG.USE_API && API_CONFIG.GOOGLE_API_KEY) {
+            try {
+              apiDistance = await getGoogleDistance(city);
+            } catch (error) {
+              apiDistance = "שגיאה: " + error.message;
+            }
+          }
+
+          resultDiv.innerHTML = `
+                    <div class="result">
+                        <h3>תוצאות עבור: ${city}</h3>
+                        <p><strong>מרחק מוגדר מראש:</strong> ${cachedDistance} ק״מ</p>
+                        <p><strong>מרחק מ-API:</strong> ${apiDistance} ${
+            typeof apiDistance === "number" ? "ק״מ" : ""
+          }</p>
+                        ${
+                          typeof apiDistance === "number" && cachedDistance > 0
+                            ? `<p><strong>הפרש:</strong> ${Math.abs(
+                                apiDistance - cachedDistance
+                              ).toFixed(1)} ק״מ</p>`
+                            : ""
+                        }
+                    </div>
+                `;
+        } catch (error) {
+          resultDiv.innerHTML = `<div class="error">שגיאה: ${error.message}</div>`;
+        }
+      }
+
+      async function getGoogleDistance(location) {
+        if (!API_CONFIG.GOOGLE_API_KEY) {
+          throw new Error("Google API key not configured");
+        }
+
+        const origin = `${BEIT_SHEAN_COORDS.lat},${BEIT_SHEAN_COORDS.lng}`;
+        const destination = `${location}, ישראל`;
+
+        const url = `${
+          API_CONFIG.GOOGLE_DISTANCE_API
+        }?origins=${origin}&destinations=${encodeURIComponent(
+          destination
+        )}&key=${API_CONFIG.GOOGLE_API_KEY}&language=he&units=metric`;
+
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (
+          data.status === "OK" &&
+          data.rows[0]?.elements[0]?.status === "OK"
+        ) {
+          return data.rows[0].elements[0].distance.value / 1000; // Convert meters to km
+        }
+
+        throw new Error("Google API request failed");
+      }
+
+      function compareDistances() {
+        const city = document.getElementById("compareCity").value;
+        const resultDiv = document.getElementById("compareResult");
+
+        if (!city) {
+          resultDiv.innerHTML = '<div class="error">אנא הזן שם עיר</div>';
+          return;
+        }
+
+        const cachedDistance = DISTANCE_CACHE[city] || 0;
+
+        if (cachedDistance === 0) {
+          resultDiv.innerHTML =
+            '<div class="error">עיר לא נמצאה במאגר הנתונים</div>';
+          return;
+        }
+
+        resultDiv.innerHTML = `
+                <div class="result">
+                    <h3>השוואת מרחקים עבור: ${city}</h3>
+                    <p><strong>מרחק מוגדר מראש:</strong> ${cachedDistance} ק״מ</p>
+                    <p><strong>מחיר תוספת נסיעה:</strong> ₪${calculateSurcharge(
+                      cachedDistance
+                    )}</p>
+                    <p><em>לחישוב מדויק יותר, השתמש ב-API</em></p>
+                </div>
+            `;
+      }
+
+      function calculateSurcharge(distance) {
+        if (distance <= 10) return 0;
+        if (distance <= 30) return 50;
+
+        const extraDistance = distance - 30;
+        const extraCharges = Math.ceil(extraDistance / 30);
+        return 50 + extraCharges * 70;
+      }
+
+      function showAllDistances() {
+        const resultDiv = document.getElementById("allDistances");
+
+        let html = '<div class="result"><h3>מרחקים מוגדרים מראש:</h3><ul>';
+
+        Object.entries(DISTANCE_CACHE)
+          .sort((a, b) => a[1] - b[1])
+          .forEach(([city, distance]) => {
+            const surcharge = calculateSurcharge(distance);
+            html += `<li><strong>${city}:</strong> ${distance} ק״מ ${
+              surcharge > 0 ? `(תוספת: ₪${surcharge})` : ""
+            }</li>`;
+          });
+
+        html += "</ul></div>";
+        resultDiv.innerHTML = html;
+      }
+    </script>
+  </body>
+</html>
